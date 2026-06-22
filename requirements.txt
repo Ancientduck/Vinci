@@ -1,0 +1,7 @@
+Pillow
+google-genai
+groq
+keyboard
+pygame
+python-dotenv
+sounddevice
