@@ -17,4 +17,4 @@ main_key_vinci=YOUR_GEMINI_API_KEY_HERE
 4. Save the file.
 
 ## Credits
-Created and modified by Apurbo Bin Mostafiz.
+ME :)
