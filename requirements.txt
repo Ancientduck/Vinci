@@ -5,3 +5,8 @@ keyboard
 pygame
 python-dotenv
 sounddevice
+piper
+
+piper
+
+piper
