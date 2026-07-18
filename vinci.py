@@ -3,7 +3,7 @@ load_dotenv()
 from google import genai
 from google.genai import types
 from pathlib import Path
-#from vinci_voice import speak_stream, speak_async, speak_queue
+from vinci_voice import speak_stream, speak_async, speak_queue
 from PIL import ImageGrab
 #from user_voice import get_voice
 from datetime import datetime
@@ -13,7 +13,7 @@ import groq
 import sounddevice as sd
 import google.genai.errors as genai_errors 
 import keyboard
-#import vinci_voice
+import vinci_voice
 import subprocess
 import time
 import os
@@ -211,29 +211,29 @@ class Base_AI():
                         code_started = '```' in ai_reply
                         ai_reply += chunk.text
 
-                        # if '```' in chunk.text and not code_started:
-                        #     pre_code = chunk.text.split('```')[0]
-                        #     current_sentence += pre_code
-                        #     clean_sentence = re.sub(r'\b(?:run_script|check_screen|save|keep_in_memory|gen_code):[^\n]*', '', current_sentence).strip()
-                        #     clean = clean_sentence.replace('*', '').replace('`', '').replace('#', '')
-                        #     if clean:
-                        #         speak_async(clean)
-                        #     current_sentence = ''
-                        # else:
-                        #     current_sentence += chunk.text
+                        if '```' in chunk.text and not code_started:
+                            pre_code = chunk.text.split('```')[0]
+                            current_sentence += pre_code
+                            clean_sentence = re.sub(r'\b(?:run_script|check_screen|save|keep_in_memory|gen_code):[^\n]*', '', current_sentence).strip()
+                            clean = clean_sentence.replace('*', '').replace('`', '').replace('#', '')
+                            if clean:
+                                speak_async(clean)
+                            current_sentence = ''
+                        else:
+                            current_sentence += chunk.text
 
                         yield chunk.text
                         if '```' in ai_reply:
                             is_code = True
 
-                        # # Check for sentence completion
-                        # if any(current_sentence.strip().endswith(p) for p in [',','.', '!', '?', '\n']):
-                        #     clean_sentence = re.sub(r'\b(?:run_script|check_screen|save|keep_in_memory|gen_code):[^\n]*', '', current_sentence).strip()
-                        #     if not is_code and not any(k in clean_sentence.lower() for k in forbidden_words_to_speak):
-                        #         clean = clean_sentence.replace('*', '').replace('`', '').replace('#', '')
-                        #         if clean:
-                        #             speak_async(clean)
-                        #     current_sentence = ''
+                        # Check for sentence completion
+                        if any(current_sentence.strip().endswith(p) for p in [',','.', '!', '?', '\n']):
+                            clean_sentence = re.sub(r'\b(?:run_script|check_screen|save|keep_in_memory|gen_code):[^\n]*', '', current_sentence).strip()
+                            if not is_code and not any(k in clean_sentence.lower() for k in forbidden_words_to_speak):
+                                clean = clean_sentence.replace('*', '').replace('`', '').replace('#', '')
+                                if clean:
+                                    speak_async(clean)
+                            current_sentence = ''
                 break
 
             except genai_errors.ServerError as e:
@@ -612,8 +612,8 @@ if __name__ == "__main__":
         
 
         vinci_ai.user_prompt = prompt
-        # vinci_voice.interrupted = False
-        # vinci_voice.speak_queue.queue.clear()
+        vinci_voice.interrupted = False
+        vinci_voice.speak_queue.queue.clear()
         reply = vinci_ai.call_vinci(prompt)
         
         print('Vinci: ', end=" ")
